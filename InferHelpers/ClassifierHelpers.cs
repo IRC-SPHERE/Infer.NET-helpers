@@ -34,7 +34,7 @@ namespace SphereEngine
     /// <summary>
     /// Computes class scores and defines constraints for both dense and sparse feature representations.
     /// </summary>
-    public static class BpmUtils
+    public static class ClassifierUtils
     {
         /// <summary>
         /// Computes the class scores for dense features.

@@ -26,6 +26,7 @@
 
 namespace InferHelpers
 {
+    using System;
     using System.Linq;
     using MicrosoftResearch.Infer.Distributions;
 
@@ -60,6 +61,70 @@ namespace InferHelpers
                 f => Enumerable.Range(0, second).Select(
                     s => Enumerable.Range(0, third).Select(
                         t => Gaussian.Uniform()).ToArray()).ToArray()).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="count">Count.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[] CreateGaussianArray(int count, Func<double> mean, double variance)
+        {
+            return Enumerable.Range(0, count).Select(ia => Gaussian.FromMeanAndVariance(mean(), variance)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="count">Count.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[] CreateGaussianArray(int count, Func<double> mean, Func<double> variance)
+        {
+            return Enumerable.Range(0, count).Select(ia => Gaussian.FromMeanAndVariance(mean(), variance())).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[][] CreateGaussianArray(int first, int second, Func<double> mean, double variance)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => Enumerable.Range(0, second).Select(
+                    s => Gaussian.FromMeanAndVariance(mean(), variance)).ToArray()).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[][] CreateGaussianArray(int first, int second, Func<double> mean, Func<double> variance)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => Enumerable.Range(0, second).Select(
+                    s => Gaussian.FromMeanAndVariance(mean(), variance())).ToArray()).ToArray();
+        }
+
+        /// <summary>
+        /// Gets the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="matrix">Matrix.</param>
+        public static Gaussian[][] GetGaussianArray(double[][] matrix)
+        {
+            return matrix.Select(ia => ia.Select(Gaussian.PointMass).ToArray()).ToArray();
         }
     }
 }
