@@ -29,6 +29,7 @@ namespace InferHelpers
     using System;
     using System.Linq;
     using MicrosoftResearch.Infer.Distributions;
+    using MicrosoftResearch.Infer.Maths;
 
     /// <summary>
     /// Distribution helpers.
@@ -118,6 +119,24 @@ namespace InferHelpers
         }
 
         /// <summary>
+        /// Creates the vector gaussian array.
+        /// </summary>
+        /// <returns>The vector gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static VectorGaussian[] CreateVectorGaussianArray(int first, int second, Func<double> mean, double variance)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => VectorGaussian.FromMeanAndVariance(
+                    Vector.FromArray(Enumerable.Range(0, second).Select(s => mean()).ToArray()),
+                    PositiveDefiniteMatrix.IdentityScaledBy(second, variance)
+                )
+            ).ToArray();
+        }
+
+        /// <summary>
         /// Gets the gaussian array.
         /// </summary>
         /// <returns>The gaussian array.</returns>
@@ -125,6 +144,16 @@ namespace InferHelpers
         public static Gaussian[][] GetGaussianArray(double[][] matrix)
         {
             return matrix.Select(ia => ia.Select(Gaussian.PointMass).ToArray()).ToArray();
+        }
+
+        /// <summary>
+        /// Gets the vector gaussian array.
+        /// </summary>
+        /// <returns>The vector gaussian array.</returns>
+        /// <param name="matrix">Matrix.</param>
+        public static VectorGaussian[] GetVectorGaussianArray(double[][] matrix)
+        {
+            return matrix.Select(ia => VectorGaussian.PointMass(Vector.FromArray(ia))).ToArray();
         }
     }
 }

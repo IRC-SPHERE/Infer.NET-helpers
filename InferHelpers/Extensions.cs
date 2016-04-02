@@ -30,6 +30,7 @@ namespace InferHelpers
     using System.Collections.Generic;
     using System.Linq;
     using MicrosoftResearch.Infer.Distributions;
+    using MicrosoftResearch.Infer.Maths;
 
     public static class Extensions
     {
@@ -155,6 +156,11 @@ namespace InferHelpers
             return variables.Select(ia => ia.GetMeans<T>()).ToArray();
         }
 
+        public static Vector[] GetMeans(this IEnumerable<VectorGaussian> variables)
+        {
+            return variables.Select(ia => ia.GetMean()).ToArray();
+        }
+
         public static double[] GetVariances<T>(this IEnumerable<T> variables)
             where T: CanGetVariance<double>
         {
@@ -187,6 +193,11 @@ namespace InferHelpers
         public static double[][] GetPrecisions(this IEnumerable<IEnumerable<Gaussian>> variables)
         {
             return variables.Select(ia => ia.GetPrecisions()).ToArray();
+        }
+
+        public static PositiveDefiniteMatrix[] GetPrecisions(this IEnumerable<VectorGaussian> variables)
+        {
+            return variables.Select(ia => ia.Precision).ToArray();
         }
 
         /// <summary>
