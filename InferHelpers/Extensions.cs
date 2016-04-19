@@ -222,14 +222,14 @@ namespace InferHelpers
         /// <returns>
         /// The number of columns.
         /// </returns>
-        /// <exception cref="System.ArgumentNullException">
+        /// <exception cref="ArgumentNullException">
         /// jagged Array
         /// </exception>
-        public static int GetNumberOfColumns<T>(this IEnumerable<T[]> jaggedArray)
+        public static int NumberOfColumns<T>(this IEnumerable<T[]> jaggedArray)
         {
             if (jaggedArray == null)
             {
-                throw new ArgumentNullException("jaggedArray");
+                throw new ArgumentNullException(nameof(jaggedArray));
             }
 
             return jaggedArray.Max(row => row.Length);
@@ -247,14 +247,14 @@ namespace InferHelpers
         /// <returns>
         /// The 2D array
         /// </returns>
-        public static T[,] To2DArray<T>(this T[][] jaggedArray)
+        public static T[,] To2D<T>(this T[][] jaggedArray)
         {
             if (jaggedArray == null)
             {
                 return null;
             }
 
-            int cols = jaggedArray.GetNumberOfColumns();
+            int cols = jaggedArray.NumberOfColumns();
 
             var darray = new T[jaggedArray.Length, cols];
 
@@ -277,18 +277,18 @@ namespace InferHelpers
         }
 
         /// <summary>
-        /// The to jagged array.
+        /// Convert from 2D array to jagged array.
         /// </summary>
         /// <typeparam name="T">
         /// The type of the 2D array
         /// </typeparam>
         /// <param name="matrix">
-        /// The matrix.
+        /// The 2D array.
         /// </param>
         /// <returns>
         /// The jagged array
         /// </returns>
-        public static T[][] ToJaggedArray<T>(this T[,] matrix)
+        public static T[][] ToJagged<T>(this T[,] matrix)
         {
             if (matrix == null)
             {
