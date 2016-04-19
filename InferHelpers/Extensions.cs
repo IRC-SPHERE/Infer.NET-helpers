@@ -209,6 +209,104 @@ namespace InferHelpers
         {
             return new[] { gaussian.GetMean() - Math.Sqrt(gaussian.GetVariance()), gaussian.GetMean() + Math.Sqrt(gaussian.GetVariance()) };
         }
+
+        /// <summary>
+        /// Gets the number of columns.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The array type.
+        /// </typeparam>
+        /// <param name="jaggedArray">
+        /// The jagged array.
+        /// </param>
+        /// <returns>
+        /// The number of columns.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// jagged Array
+        /// </exception>
+        public static int GetNumberOfColumns<T>(this IEnumerable<T[]> jaggedArray)
+        {
+            if (jaggedArray == null)
+            {
+                throw new ArgumentNullException("jaggedArray");
+            }
+
+            return jaggedArray.Max(row => row.Length);
+        }
+
+        /// <summary>
+        /// Converts jagged array to 2D array, using default(T) for missing values
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the jagged array
+        /// </typeparam>
+        /// <param name="jaggedArray">
+        /// The jagged array.
+        /// </param>
+        /// <returns>
+        /// The 2D array
+        /// </returns>
+        public static T[,] To2DArray<T>(this T[][] jaggedArray)
+        {
+            if (jaggedArray == null)
+            {
+                return null;
+            }
+
+            int cols = jaggedArray.GetNumberOfColumns();
+
+            var darray = new T[jaggedArray.Length, cols];
+
+            for (int i = 0; i < jaggedArray.Length; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (j < jaggedArray[i].Length)
+                    {
+                        darray[i, j] = jaggedArray[i][j];
+                    }
+                    else
+                    {
+                        darray[i, j] = default(T);
+                    }
+                }
+            }
+
+            return darray;
+        }
+
+        /// <summary>
+        /// The to jagged array.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the 2D array
+        /// </typeparam>
+        /// <param name="matrix">
+        /// The matrix.
+        /// </param>
+        /// <returns>
+        /// The jagged array
+        /// </returns>
+        public static T[][] ToJaggedArray<T>(this T[,] matrix)
+        {
+            if (matrix == null)
+            {
+                return null;
+            }
+
+            var darray = new T[matrix.GetLength(0)][];
+            for (int i = 0; i < matrix.GetLength(0); i++)
+            {
+                darray[i] = new T[matrix.GetLength(1)];
+                for (int j = 0; j < matrix.GetLength(1); j++)
+                {
+                    darray[i][j] = matrix[i, j];
+                }
+            }
+
+            return darray;
+        }
     }
 }
 
