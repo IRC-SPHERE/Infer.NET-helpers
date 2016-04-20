@@ -24,11 +24,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-namespace SphereEngine
+using MicrosoftResearch.Infer.Maths;
+using MicrosoftResearch.Infer.Models;
+
+namespace InferHelpers
 {
-    using MicrosoftResearch.Infer.Maths;
-    using MicrosoftResearch.Infer.Models;
-    
     using VariableArray2DDouble = MicrosoftResearch.Infer.Models.VariableArray<MicrosoftResearch.Infer.Models.VariableArray<double>, double[][]>;
 
     /// <summary>

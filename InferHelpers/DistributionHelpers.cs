@@ -126,6 +126,24 @@ namespace InferHelpers
         /// <param name="second">Second.</param>
         /// <param name="mean">Mean.</param>
         /// <param name="variance">Variance.</param>
+        public static VectorGaussian[] CreateVectorGaussianArray(int first, int second, double mean, double variance)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => VectorGaussian.FromMeanAndVariance(
+                    Vector.FromArray(Enumerable.Repeat(mean, second).ToArray()),
+                    PositiveDefiniteMatrix.IdentityScaledBy(second, variance)
+                )
+            ).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the vector gaussian array.
+        /// </summary>
+        /// <returns>The vector gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
         public static VectorGaussian[] CreateVectorGaussianArray(int first, int second, Func<double> mean, double variance)
         {
             return Enumerable.Range(0, first).Select(
