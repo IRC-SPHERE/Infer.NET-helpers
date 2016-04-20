@@ -173,6 +173,18 @@ namespace InferHelpers
         {
             return matrix.Select(ia => VectorGaussian.PointMass(Vector.FromArray(ia))).ToArray();
         }
+
+        /// <summary>
+        /// Independent (diagonal) approximation of the vector Gaussian.
+        /// </summary>
+        /// <returns>The approximation.</returns>
+        /// <param name="variable">Variable.</param>
+        public static Gaussian[] IndependentApproximation(VectorGaussian variable)
+        {
+            var means = variable.GetMean().ToArray();
+            var precs = variable.Precision.Diagonal().ToArray();
+            return means.Zip(precs, (m, p) => Gaussian.FromMeanAndPrecision(m, p)).ToArray();
+        }
     }
 }
 
