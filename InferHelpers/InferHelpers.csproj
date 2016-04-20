@@ -41,6 +41,7 @@
     <Compile Include="DistributionHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="ArrayHelpers.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
