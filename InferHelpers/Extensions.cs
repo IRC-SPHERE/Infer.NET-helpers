@@ -307,6 +307,34 @@ namespace InferHelpers
 
             return darray;
         }
+
+        public static Gaussian Scale(this Gaussian gaussian, double scale)
+        {
+            double mean = gaussian.GetMean() / scale;
+            double variance = Math.Pow(Math.Sqrt(gaussian.GetVariance()) / scale, 2);
+            return Gaussian.FromMeanAndVariance(mean, variance);
+        }
+
+        /// <summary>
+        /// Normalises the array.
+        /// </summary>
+        /// <returns>The array.</returns>
+        /// <param name="array">array.</param>
+        public static Gaussian[][] Normalise(this Gaussian[][] array)
+        {
+            var arrayNormalised = new Gaussian[array.Length][];
+            for (var i = 0; i < array.Length; i++)
+            {
+                // Compute norm of row
+                var means = array[i].GetMeans();
+                double norm = means.Sum(x => x * x);
+
+                // Rescaling from Theorem 4.3 of https://www.probabilitycourse.com/chapter4/4_2_3_normal.php
+                arrayNormalised[i] = array[i].Select(g => g.Scale(norm)).ToArray();
+            }
+
+            return arrayNormalised;
+        }
     }
 }
 

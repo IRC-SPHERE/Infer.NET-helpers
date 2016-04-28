@@ -237,7 +237,7 @@ namespace InferHelpers
         {
             var means = variable.GetMean().ToArray();
             var precs = variable.Precision.Diagonal().ToArray();
-            return means.Zip(precs, (m, p) => Gaussian.FromMeanAndPrecision(m, p)).ToArray();
+            return means.Zip(precs, Gaussian.FromMeanAndPrecision).ToArray();
         }
     }
 }
