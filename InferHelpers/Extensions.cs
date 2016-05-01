@@ -335,6 +335,27 @@ namespace InferHelpers
 
             return arrayNormalised;
         }
+
+        /// <summary>
+        /// Gets the approximate sparsity.
+        /// </summary>
+        /// <param name="gaussians">The Gaussian array.</param>
+        /// <param name="threshold">The threshold.</param>
+        public static double GetSparsity(this Gaussian[] gaussians, double threshold)
+        {
+            return gaussians.Select(ia => Math.Abs(ia.GetMean()) > 1e-5 ? 0.0 : 1.0).Average();
+        }
+
+        /// <summary>
+        /// Gets the approximate sparsity.
+        /// </summary>
+        /// <param name="gaussians">The Gaussian array.</param>
+        /// <param name="threshold">The threshold.</param>
+        public static double[] GetSparsity(this Gaussian[][] gaussians, double threshold)
+        {
+            return gaussians.Select(ia => ia.GetSparsity(threshold)).ToArray();
+        }
+
     }
 }
 
