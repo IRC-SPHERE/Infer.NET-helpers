@@ -239,6 +239,24 @@ namespace InferHelpers
             var precs = variable.Precision.Diagonal().ToArray();
             return means.Zip(precs, Gaussian.FromMeanAndPrecision).ToArray();
         }
+
+        /// <summary>
+        /// Copies the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array copy.</returns>
+        public static Gaussian[] Copy(Gaussian[] array)
+        {
+            return array.Select(ia => new Gaussian(ia)).ToArray();
+        }
+
+        /// <summary>
+        /// Copies the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array copy.</returns>
+        public static Gaussian[][] Copy(Gaussian[][] array)
+        {
+            return array.Select(Copy).ToArray();
+        }
     }
 }
 
