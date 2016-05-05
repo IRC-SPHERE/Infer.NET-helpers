@@ -209,6 +209,33 @@ namespace InferHelpers
         }
 
         /// <summary>
+        /// Creates the gamma array.
+        /// </summary>
+        /// <returns>The gamma array.</returns>
+        /// <param name="count">Count.</param>
+        /// <param name="shape">Shape.</param>
+        /// <param name="rate">Rate.</param>
+        public static Gamma[] CreateGammaArray(int count, double shape, double rate)
+        {
+            return Enumerable.Range(0, count).Select(ia => Gamma.FromShapeAndRate(shape, rate)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gamma array.
+        /// </summary>
+        /// <returns>The gamma array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="shape">Shape.</param>
+        /// <param name="rate">Rate.</param>
+        public static Gamma[][] CreateGammaArray(int first, int second, double shape, double rate)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => Enumerable.Range(0, second).Select(
+                    s => Gamma.FromShapeAndRate(shape, rate)).ToArray()).ToArray();
+        }
+
+        /// <summary>
         /// Gets the gaussian array.
         /// </summary>
         /// <returns>The gaussian array.</returns>
@@ -254,6 +281,24 @@ namespace InferHelpers
         /// </summary>
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[][] Copy(Gaussian[][] array)
+        {
+            return array.Select(Copy).ToArray();
+        }
+
+        /// <summary>
+        /// Copies the gamma array.
+        /// </summary>
+        /// <returns>The gamma array copy.</returns>
+        public static Gamma[] Copy(Gamma[] array)
+        {
+            return array.Select(ia => new Gamma(ia)).ToArray();
+        }
+
+        /// <summary>
+        /// Copies the gamma array.
+        /// </summary>
+        /// <returns>The gamma array copy.</returns>
+        public static Gamma[][] Copy(Gamma[][] array)
         {
             return array.Select(Copy).ToArray();
         }
