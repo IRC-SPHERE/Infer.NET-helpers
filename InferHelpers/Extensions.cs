@@ -356,6 +356,41 @@ namespace InferHelpers
             return gaussians.Select(ia => ia.GetSparsity(threshold)).ToArray();
         }
 
+        /// <summary>
+        /// Copies the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array copy.</returns>
+        public static Gaussian[] Copy(this Gaussian[] array)
+        {
+            return array.Select(ia => new Gaussian(ia)).ToArray();
+        }
+
+        /// <summary>
+        /// Copies the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array copy.</returns>
+        public static Gaussian[][] Copy(this Gaussian[][] array)
+        {
+            return array.Select(Copy).ToArray();
+        }
+
+        /// <summary>
+        /// Copies the gamma array.
+        /// </summary>
+        /// <returns>The gamma array copy.</returns>
+        public static Gamma[] Copy(this Gamma[] array)
+        {
+            return array.Select(ia => new Gamma(ia)).ToArray();
+        }
+
+        /// <summary>
+        /// Copies the gamma array.
+        /// </summary>
+        /// <returns>The gamma array copy.</returns>
+        public static Gamma[][] Copy(this Gamma[][] array)
+        {
+            return array.Select(Copy).ToArray();
+        }
     }
 }
 
