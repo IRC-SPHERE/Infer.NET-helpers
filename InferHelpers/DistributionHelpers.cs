@@ -242,7 +242,7 @@ namespace InferHelpers
         /// <param name="matrix">Matrix.</param>
         public static Gaussian[][] GetGaussianArray(double[][] matrix)
         {
-            return matrix.Select(ia => ia.Select(Gaussian.PointMass).ToArray()).ToArray();
+            return matrix?.Select(ia => ia.Select(Gaussian.PointMass).ToArray()).ToArray();
         }
 
         /// <summary>
@@ -252,7 +252,7 @@ namespace InferHelpers
         /// <param name="matrix">Matrix.</param>
         public static VectorGaussian[] GetVectorGaussianArray(double[][] matrix)
         {
-            return matrix.Select(ia => VectorGaussian.PointMass(Vector.FromArray(ia))).ToArray();
+            return matrix?.Select(ia => VectorGaussian.PointMass(Vector.FromArray(ia))).ToArray();
         }
 
         /// <summary>
@@ -273,7 +273,7 @@ namespace InferHelpers
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[] Copy(Gaussian[] array)
         {
-            return array.Select(ia => new Gaussian(ia)).ToArray();
+            return array?.Select(ia => new Gaussian(ia)).ToArray();
         }
 
         /// <summary>
@@ -282,7 +282,7 @@ namespace InferHelpers
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[][] Copy(Gaussian[][] array)
         {
-            return array.Select(Copy).ToArray();
+            return array?.Select(Copy).ToArray();
         }
 
         /// <summary>
@@ -291,7 +291,7 @@ namespace InferHelpers
         /// <returns>The gamma array copy.</returns>
         public static Gamma[] Copy(Gamma[] array)
         {
-            return array.Select(ia => new Gamma(ia)).ToArray();
+            return array?.Select(ia => new Gamma(ia)).ToArray();
         }
 
         /// <summary>
@@ -300,7 +300,7 @@ namespace InferHelpers
         /// <returns>The gamma array copy.</returns>
         public static Gamma[][] Copy(Gamma[][] array)
         {
-            return array.Select(Copy).ToArray();
+            return array?.Select(Copy).ToArray();
         }
 
         /// <summary>
@@ -309,6 +309,11 @@ namespace InferHelpers
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[,] Copy(Gaussian[,] array)
         {
+            if (array == null)
+            {
+                return null;
+            }
+
             var copy = new Gaussian[array.GetLength(0), array.GetLength(1)];
             for (var i = 0; i < array.GetLength(0); i++)
             {
