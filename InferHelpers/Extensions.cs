@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using MicrosoftResearch.Infer.Collections;
+
 namespace InferHelpers
 {
     using System;
@@ -362,7 +364,7 @@ namespace InferHelpers
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[] Copy(this Gaussian[] array)
         {
-            return array.Select(ia => new Gaussian(ia)).ToArray();
+            return DistributionHelpers.Copy(array);
         }
 
         /// <summary>
@@ -371,7 +373,7 @@ namespace InferHelpers
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[][] Copy(this Gaussian[][] array)
         {
-            return array.Select(Copy).ToArray();
+            return DistributionHelpers.Copy(array);
         }
 
         /// <summary>
@@ -380,7 +382,7 @@ namespace InferHelpers
         /// <returns>The gamma array copy.</returns>
         public static Gamma[] Copy(this Gamma[] array)
         {
-            return array.Select(ia => new Gamma(ia)).ToArray();
+            return DistributionHelpers.Copy(array);
         }
 
         /// <summary>
@@ -389,7 +391,38 @@ namespace InferHelpers
         /// <returns>The gamma array copy.</returns>
         public static Gamma[][] Copy(this Gamma[][] array)
         {
-            return array.Select(Copy).ToArray();
+            return DistributionHelpers.Copy(array);
+        }
+
+        /// <summary>
+        /// Copies the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array copy.</returns>
+        public static Gaussian[,] Copy(this Gaussian[,] array)
+        {
+            return DistributionHelpers.Copy(array);
+        }
+
+        public static void Print(this Gaussian[] array, int max = int.MaxValue)
+        {
+            // Console.WriteLine(string.Join(", ", array.Take(max).Select(ia => $"[{ia.GetMean():N4}, {ia.GetVariance():N4}]")));
+            Console.WriteLine(string.Join(", ", array.Take(max).Select(ia => ia.ToString())));
+        }
+
+        public static void Print(this Gamma[] array, int max = int.MaxValue)
+        {
+            // Console.WriteLine(string.Join(", ", array.Take(max).Select(ia => $"[{ia.Shape:N4}, {ia.Rate:N4}]")));
+            Console.WriteLine(string.Join(", ", array.Take(max).Select(ia => ia.ToString())));
+        }
+
+        public static void Print(this IEnumerable<Gaussian[]> array, int maxRows = int.MaxValue, int maxCols = int.MaxValue)
+        {
+            array.Take(maxRows).ForEach(ia => ia.Print(maxCols));
+        }
+
+        public static void Print(this IEnumerable<Gamma[]> array, int maxRows = int.MaxValue, int maxCols = int.MaxValue)
+        {
+            array.Take(maxRows).ForEach(ia => ia.Print(maxCols));
         }
     }
 }

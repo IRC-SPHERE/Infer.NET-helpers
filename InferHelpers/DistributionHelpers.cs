@@ -302,6 +302,58 @@ namespace InferHelpers
         {
             return array.Select(Copy).ToArray();
         }
+
+        /// <summary>
+        /// Copies the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array copy.</returns>
+        public static Gaussian[,] Copy(Gaussian[,] array)
+        {
+            var copy = new Gaussian[array.GetLength(0), array.GetLength(1)];
+            for (var i = 0; i < array.GetLength(0); i++)
+            {
+                for (var j = 0; j < array.GetLength(1); j++)
+                {
+                    copy[i, j] = new Gaussian(array[i, j]);
+                }
+            }
+
+            return copy;
+        }
+
+        /// <summary>
+        /// Maximum difference between Gaussian arrays according to function f
+        /// </summary>
+        public static double MaxDiff(Gaussian[] a, Gaussian[] b, Func<Gaussian, Gaussian, double> f)
+        {
+            if (a == null || b == null || a.Length != b.Length)
+            {
+                throw new InvalidOperationException("Both arrays should be non null and same length");
+            }
+
+            return a.Zip(b, f).Max();
+        }
+
+        /// <summary>
+        /// Maximum difference between Gaussian arrays according to function f
+        /// </summary>
+        public static double MaxDiff(Gaussian[][] a, Gaussian[][] b, Func<Gaussian, Gaussian, double> f)
+        {
+            if (a == null || b == null || a.Length != b.Length)
+            {
+                throw new InvalidOperationException("Both arrays should be non null and same length");
+            }
+
+            return a.Zip(b, (ia, ib) => MaxDiff(ia, ib, f)).Max();
+        }
+
+        /// <summary>
+        /// Maximum difference between Gaussian arrays according to function f
+        /// </summary>
+        public static double MaxDiff(Gaussian[,] a, Gaussian[,] b, Func<Gaussian, Gaussian, double> f)
+        {
+            return MaxDiff(a.ToJagged(), b.ToJagged(), f);
+        }
     }
 }
 
