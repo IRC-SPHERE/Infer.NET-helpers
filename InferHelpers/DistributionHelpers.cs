@@ -326,6 +326,16 @@ namespace InferHelpers
             return copy;
         }
 
+        public static double MeanComparer(Gaussian ia, Gaussian ib)
+        {
+            return Math.Abs(ia.GetMean() - ib.GetMean());
+        }
+
+        public static double StdDevComparer(Gaussian ia, Gaussian ib)
+        {
+            return Math.Abs(Math.Sqrt(ia.GetVariance()) - Math.Sqrt(ib.GetVariance()));
+        }
+
         /// <summary>
         /// Maximum difference between Gaussian arrays according to function f
         /// </summary>
@@ -336,7 +346,14 @@ namespace InferHelpers
                 throw new InvalidOperationException("Both arrays should be non null and same length");
             }
 
-            return a.Zip(b, f).Max();
+            var diffs = new double[a.Length];
+            for (var i = 0; i < a.Length; i++)
+            {
+                diffs[i] = f(a[i], b[i]);
+            }
+
+            return diffs.Max();
+            // return a.Zip(b, f).Max();
         }
 
         /// <summary>
