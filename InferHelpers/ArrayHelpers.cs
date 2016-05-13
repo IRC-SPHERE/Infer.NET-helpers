@@ -51,6 +51,16 @@ namespace InferHelpers
         {
             return Enumerable.Repeat(Zeros(m), n).ToArray();
         }
+
+        /// <summary>
+        /// double version of Enumerable.Range
+        /// </summary>
+        /// <param name="start">The starting value.</param>
+        /// <param name="count">The number of items.</param>
+        public static double[] DoubleRange(int start, int count)
+        {
+            return Enumerable.Range(start, count).Select(x => (double) x).ToArray();
+        }
     }
 }
 
