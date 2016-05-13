@@ -310,11 +310,29 @@ namespace InferHelpers
             return darray;
         }
 
+        /// <summary>
+        /// Scales the Gaussian.
+        /// </summary>
+        /// <returns>The scaled Gaussian.</returns>
+        /// <param name="gaussian">The Gaussian.</param>
+        /// <param name="scale">The scaling factor.</param>
         public static Gaussian Scale(this Gaussian gaussian, double scale)
         {
             double mean = gaussian.GetMean() / scale;
             double variance = Math.Pow(Math.Sqrt(gaussian.GetVariance()) / scale, 2);
             return Gaussian.FromMeanAndVariance(mean, variance);
+        }
+
+        /// <summary>
+        /// L2 Norm of the Gaussian array (means).
+        /// </summary>
+        /// <returns>The L2 norm.</returns>
+        /// <param name="array">array.</param>
+        public static double L2Norm(this Gaussian[] array)
+        {
+            var means = array.GetMeans();
+            double norm = means.Sum(x => x * x);
+            return norm;
         }
 
         /// <summary>
@@ -328,8 +346,7 @@ namespace InferHelpers
             for (var i = 0; i < array.Length; i++)
             {
                 // Compute norm of row
-                var means = array[i].GetMeans();
-                double norm = means.Sum(x => x * x);
+                double norm = array[i].L2Norm();
 
                 // Rescaling from Theorem 4.3 of https://www.probabilitycourse.com/chapter4/4_2_3_normal.php
                 arrayNormalised[i] = array[i].Select(g => g.Scale(norm)).ToArray();
@@ -345,7 +362,12 @@ namespace InferHelpers
         /// <param name="threshold">The threshold.</param>
         public static double GetSparsity(this Gaussian[] gaussians, double threshold)
         {
-            return gaussians.Select(ia => Math.Abs(ia.GetMean()) > 1e-5 ? 0.0 : 1.0).Average();
+            // Want to take the norm of the vector into account
+            double norm = gaussians.L2Norm();
+            double cutoff = threshold * norm;
+
+            // TODO: Do we want to call GetLogProb and take the variance into account?
+            return gaussians.Select(ia => Math.Abs(ia.GetMean()) > cutoff ? 0.0 : 1.0).Average();
         }
 
         /// <summary>
