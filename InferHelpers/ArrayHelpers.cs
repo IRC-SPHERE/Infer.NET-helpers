@@ -53,6 +53,27 @@ namespace InferHelpers
         }
 
         /// <summary>
+        /// Uniform array of length m.
+        /// </summary>
+        /// <param name="m">m.</param>
+        /// <param name="value">Value.</param>
+        public static T[] Uniform<T>(int m, T value)
+        {
+            return Enumerable.Repeat(value, m).ToArray();
+        }
+
+        /// <summary>
+        /// Jagged array of uniform values of lengths m, n.
+        /// </summary>
+        /// <param name="m">M.</param>
+        /// <param name="n">N.</param>
+        /// <param name="value">Value.</param>
+        public static T[][] Uniform<T>(int m, int n, T value)
+        {
+            return Enumerable.Repeat(Uniform(m, value), n).ToArray();
+        }
+
+        /// <summary>
         /// double version of Enumerable.Range
         /// </summary>
         /// <param name="start">The starting value.</param>
