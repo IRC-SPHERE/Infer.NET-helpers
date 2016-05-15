@@ -446,6 +446,40 @@ namespace InferHelpers
         {
             array.Take(maxRows).ForEach(ia => ia.Print(maxCols));
         }
+
+        /// <summary>
+        /// Transposes the specified 2D array.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The array type.
+        /// </typeparam>
+        /// <param name="array2D">
+        /// The array2D.
+        /// </param>
+        /// <returns>
+        /// The transposed array.
+        /// </returns>
+        public static T[,] Transpose<T>(this T[,] array2D)
+        {
+            if (array2D == null)
+            {
+                return null;
+            }
+
+            int rows = array2D.GetLength(0);
+            int cols = array2D.GetLength(1);
+            var transposed = new T[cols, rows];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    transposed[j, i] = array2D[i, j];
+                }
+            }
+
+            return transposed;
+        }
     }
 }
 
