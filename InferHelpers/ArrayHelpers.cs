@@ -27,7 +27,6 @@
 namespace InferHelpers
 {
     using System.Linq;
-    using MicrosoftResearch.Infer.Maths;
 
     /// <summary>
     /// Array helpers.
@@ -50,17 +49,7 @@ namespace InferHelpers
         /// <param name="n">N.</param>
         public static double[][] Zeros(int m, int n)
         {
-            return Enumerable.Repeat(Zeros(n), m).ToArray();
-        }
-
-        /// <summary>
-        /// Array of zero vectors of lengths m, n.
-        /// </summary>
-        /// <param name="m">M.</param>
-        /// <param name="n">N.</param>
-        public static Vector[] VectorZeros(int m, int n)
-        {
-            return Enumerable.Repeat(Vector.Zero(n), m).ToArray();
+            return Enumerable.Repeat(Zeros(m), n).ToArray();
         }
 
         /// <summary>

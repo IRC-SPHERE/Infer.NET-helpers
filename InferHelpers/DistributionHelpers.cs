@@ -277,15 +277,6 @@ namespace InferHelpers
         }
 
         /// <summary>
-        /// Copies the vector gaussian array.
-        /// </summary>
-        /// <returns>The gaussian array copy.</returns>
-        public static VectorGaussian[] Copy(VectorGaussian[] array)
-        {
-            return array?.Select(ia => new VectorGaussian(ia)).ToArray();
-        }
-
-        /// <summary>
         /// Copies the gaussian array.
         /// </summary>
         /// <returns>The gaussian array copy.</returns>
@@ -384,31 +375,6 @@ namespace InferHelpers
         public static double MaxDiff(Gaussian[,] a, Gaussian[,] b, Func<Gaussian, Gaussian, double> f)
         {
             return MaxDiff(a.ToJagged(), b.ToJagged(), f);
-        }
-
-        /// <summary>
-        /// Gets the approximate sparsity.
-        /// </summary>
-        /// <param name="gaussians">The Gaussian array.</param>
-        /// <param name="threshold">The threshold.</param>
-        public static double GetSparsity(Gaussian[] gaussians, double threshold)
-        {
-            // Want to take the norm of the vector into account
-            double norm = gaussians.L2Norm();
-            double cutoff = threshold * norm;
-
-            // TODO: Do we want to call GetLogProb and take the variance into account?
-            return gaussians.Select(ia => Math.Abs(ia.GetMean()) > cutoff ? 0.0 : 1.0).Average();
-        }
-
-        /// <summary>
-        /// Gets the approximate sparsity.
-        /// </summary>
-        /// <param name="gaussians">The Gaussian array.</param>
-        /// <param name="threshold">The threshold.</param>
-        public static double[] GetSparsity(Gaussian[][] gaussians, double threshold)
-        {
-            return gaussians.Select(ia => ia.GetSparsity(threshold)).ToArray();
         }
     }
 }
