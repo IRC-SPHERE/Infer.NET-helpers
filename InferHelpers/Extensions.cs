@@ -362,12 +362,7 @@ namespace InferHelpers
         /// <param name="threshold">The threshold.</param>
         public static double GetSparsity(this Gaussian[] gaussians, double threshold)
         {
-            // Want to take the norm of the vector into account
-            double norm = gaussians.L2Norm();
-            double cutoff = threshold * norm;
-
-            // TODO: Do we want to call GetLogProb and take the variance into account?
-            return gaussians.Select(ia => Math.Abs(ia.GetMean()) > cutoff ? 0.0 : 1.0).Average();
+            return DistributionHelpers.GetSparsity(gaussians, threshold);
         }
 
         /// <summary>
@@ -377,7 +372,7 @@ namespace InferHelpers
         /// <param name="threshold">The threshold.</param>
         public static double[] GetSparsity(this Gaussian[][] gaussians, double threshold)
         {
-            return gaussians.Select(ia => ia.GetSparsity(threshold)).ToArray();
+            return DistributionHelpers.GetSparsity(gaussians, threshold);
         }
 
         /// <summary>
@@ -394,6 +389,15 @@ namespace InferHelpers
         /// </summary>
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[][] Copy(this Gaussian[][] array)
+        {
+            return DistributionHelpers.Copy(array);
+        }
+
+        /// <summary>
+        /// Copies the vector gaussian array.
+        /// </summary>
+        /// <returns>The vector gaussian array copy.</returns>
+        public static VectorGaussian[] Copy(this VectorGaussian[] array)
         {
             return DistributionHelpers.Copy(array);
         }
@@ -475,6 +479,45 @@ namespace InferHelpers
                 for (int j = 0; j < cols; j++)
                 {
                     transposed[j, i] = array2D[i, j];
+                }
+            }
+
+            return transposed;
+        }
+
+        /// <summary>
+        /// Transposes the specified jagged array.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The array type.
+        /// </typeparam>
+        /// <param name="array">
+        /// The jagged array.
+        /// </param>
+        /// <returns>
+        /// The transposed array.
+        /// </returns>
+        public static T[][] Transpose<T>(this T[][] array)
+        {
+            if (array == null)
+            {
+                return null;
+            }
+
+            // NOTE: Assumes that this array is in fact a 2D array (i.e. not actually jagged)
+
+            int rows = array.Length;
+            int cols = array[0].Length;
+            var transposed = new T[cols][];
+
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    if (i == 0)
+                        transposed[j] = new T[rows];
+
+                    transposed[j][i] = array[i][j];
                 }
             }
 
