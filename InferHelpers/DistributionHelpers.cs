@@ -246,6 +246,16 @@ namespace InferHelpers
         }
 
         /// <summary>
+        /// Gets the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="matrices">Matrices.</param>
+        public static Gaussian[][][] GetGaussianArray(double[][][] matrices)
+        {
+            return matrices?.Select(ia => ia.Select(ib => ib.Select(Gaussian.PointMass).ToArray()).ToArray()).ToArray();
+        }
+
+        /// <summary>
         /// Gets the vector gaussian array.
         /// </summary>
         /// <returns>The vector gaussian array.</returns>
