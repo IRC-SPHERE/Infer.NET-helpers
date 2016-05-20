@@ -29,7 +29,7 @@ using MicrosoftResearch.Infer.Models;
 
 namespace InferHelpers
 {
-    using VariableArray2DDouble = MicrosoftResearch.Infer.Models.VariableArray<MicrosoftResearch.Infer.Models.VariableArray<double>, double[][]>;
+    using VariableArray2DDouble = VariableArray<VariableArray<double>, double[][]>;
 
     /// <summary>
     /// Computes class scores and defines constraints for both dense and sparse feature representations.
