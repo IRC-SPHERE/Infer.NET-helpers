@@ -83,19 +83,20 @@ namespace InferHelpers
             VariableArray<VariableArray<double>,
             double[][]> weights,
             VariableArray<double> features,
-            Variable<double> noisePrecision)
+            Variable<double> noisePrecision,
+            string prefix="")
 		{
 			// VMP version
 			// return ComputeClassScores(weights, Variable.Vector(features).Named("vectorFeatures"), noisePrecision);
 
 			// EP friendly version
-			var c = weights.Range.Clone().Named("k");
-			var f = features.Range.Clone().Named("f");
-			var score = Variable.Array<double>(c).Named("score");
-			var scorePlusNoise = Variable.Array<double>(c).Named("scorePlusNoise");
+			var c = weights.Range.Clone().Named(prefix + "k");
+			var f = features.Range.Clone().Named(prefix + "f");
+			var score = Variable.Array<double>(c).Named(prefix + "score");
+			var scorePlusNoise = Variable.Array<double>(c).Named(prefix + "scorePlusNoise");
 			using (Variable.ForEach(c))
 			{
-				var products = Variable.Array<double>(f).Named("products");
+				var products = Variable.Array<double>(f).Named(prefix + "products");
 				using (Variable.ForEach(f))
 				{
 					products[f] = weights[c][f] * features[f];
