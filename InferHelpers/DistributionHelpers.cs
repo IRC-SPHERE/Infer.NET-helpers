@@ -24,6 +24,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+using System.Collections.Generic;
+
 namespace InferHelpers
 {
     using System;
@@ -342,6 +344,38 @@ namespace InferHelpers
             }
 
             return copy;
+        }
+
+        /// <summary>
+        /// Copy the distribution array.
+        /// </summary>
+        /// <typeparam name="TDistribution">The type of the distribution.</typeparam>
+        /// <param name="arrayToCopy">The array to copy.</param>
+        /// <returns>
+        /// The <see cref="DistributionStructArray{TDistribution, Double}" />.
+        /// </returns>
+        public static DistributionStructArray<TDistribution, double> Copy<TDistribution>(IEnumerable<TDistribution> arrayToCopy)
+            where TDistribution : struct, IDistribution<double>, SettableToProduct<TDistribution>, SettableToRatio<TDistribution>,
+            SettableToPower<TDistribution>, SettableToWeightedSum<TDistribution>, CanGetLogAverageOf<TDistribution>,
+            CanGetLogAverageOfPower<TDistribution>, CanGetAverageLog<TDistribution>, Sampleable<double>
+        {
+            return (DistributionStructArray<TDistribution, double>)Distribution<double>.Array(arrayToCopy.ToArray());
+        }
+
+        /// <summary>
+        /// Copy the distribution array.
+        /// </summary>
+        /// <typeparam name="TDistribution">The type of the distribution.</typeparam>
+        /// <param name="arrayToCopy">The array to copy.</param>
+        /// <returns>
+        /// The <see cref="DistributionStructArray{TDistribution, Double}" /> array.
+        /// </returns>
+        public static DistributionStructArray<TDistribution, double>[] Copy<TDistribution>(IEnumerable<IList<TDistribution>> arrayToCopy)
+            where TDistribution : struct, IDistribution<double>, SettableToProduct<TDistribution>, SettableToRatio<TDistribution>,
+            SettableToPower<TDistribution>, SettableToWeightedSum<TDistribution>, CanGetLogAverageOf<TDistribution>,
+            CanGetLogAverageOfPower<TDistribution>, CanGetAverageLog<TDistribution>, Sampleable<double>
+        {
+            return arrayToCopy.Select(Copy).ToArray();
         }
 
         public static double MeanComparer(Gaussian ia, Gaussian ib)
