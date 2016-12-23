@@ -193,5 +193,30 @@ namespace InferHelpers
                 }
             }
         }
+
+        /// <summary>
+        /// Defines the symmetry-breaking constraints.
+        /// For each feature, the sum of weights is constraint to be constant over all classes.
+        /// </summary>
+        /// <param name="weights">The random variables over the weights.</param>
+        /// <param name="classRange">The class range.</param>
+        /// <param name="feature">The feature range.</param>
+        /// <param name="prefix">Prefix for variable names</param>
+        public static void DefineSymmetryBreaking(
+            VariableArray<VariableArray<double>, double[][]> weights, Range classRange, Range feature, string prefix)
+        {
+            var transposedWeights = Variable.Array(Variable.Array<double>(classRange), feature)
+                .Named(prefix + "TransposedWeights");
+            var transposedWeightSums = Variable.Array<double>(feature).Named(prefix + "TransposedWeightSums");
+
+            // Transpose the weights
+            transposedWeights[feature][classRange] = Variable.Copy(weights[classRange][feature]);
+
+            // For each feature, sum the transposed weights over classes
+            transposedWeightSums[feature] = Variable.Sum(transposedWeights[feature]);
+
+            // Constrain all sums to be constant
+            Variable.ConstrainEqual(transposedWeightSums[feature], 0);
+        }
     }
 }
