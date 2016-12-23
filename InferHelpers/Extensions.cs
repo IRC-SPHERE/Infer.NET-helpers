@@ -202,6 +202,26 @@ namespace InferHelpers
             return variables.Select(ia => ia.Precision).ToArray();
         }
 
+        public static Gaussian[] GetPointMassGaussians(this IEnumerable<double> values)
+        {
+            return values.Select(Gaussian.PointMass).ToArray();
+        }
+
+        public static Gaussian[][] GetPointMassGaussians(this IEnumerable<IEnumerable<double>> values)
+        {
+            return values.Select(ia => ia.GetPointMassGaussians()).ToArray();
+        }
+
+        public static Gamma[] GetPointMassGammas(this IEnumerable<double> values)
+        {
+            return values.Select(Gamma.PointMass).ToArray();
+        }
+
+        public static Gamma[][] GetPointMassGammas(this IEnumerable<IEnumerable<double>> values)
+        {
+            return values.Select(ia => ia.GetPointMassGammas()).ToArray();
+        }
+
         /// <summary>
         /// Gets the plus minus sigma.
         /// </summary>
@@ -438,6 +458,11 @@ namespace InferHelpers
         public static void Print(this Gamma[] array, int max = int.MaxValue)
         {
             // Console.WriteLine(string.Join(", ", array.Take(max).Select(ia => $"[{ia.Shape:N4}, {ia.Rate:N4}]")));
+            Console.WriteLine(string.Join(", ", array.Take(max).Select(ia => ia.ToString())));
+        }
+
+        public static void Print(this Discrete[] array, int max = int.MaxValue)
+        {
             Console.WriteLine(string.Join(", ", array.Take(max).Select(ia => ia.ToString())));
         }
 
