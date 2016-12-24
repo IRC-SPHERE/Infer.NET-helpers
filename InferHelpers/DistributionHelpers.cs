@@ -25,6 +25,7 @@
 // THE SOFTWARE.
 
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace InferHelpers
 {
@@ -453,6 +454,53 @@ namespace InferHelpers
         {
             return gaussians.Select(ia => ia.GetSparsity(threshold)).ToArray();
         }
+
+        /// <summary>
+        /// Create a distribution over an array domain from independent distributions over the elements.
+        /// </summary>
+        /// <typeparam name="T">Distribution type for an array element.</typeparam>
+        /// <param name="array">The distribution of each element.</param>
+        /// <returns>A single distribution object over the array domain.</returns>
+        public static IDistribution<double[][][][]> Array<T>(T[][][][] array)
+            where T : IDistribution<double>
+        {
+            var inner2Type = Distribution.MakeDistributionArrayType(typeof (T), 1);
+            var innerType = Distribution.MakeDistributionArrayType(inner2Type, 1);
+            var middleType = Distribution.MakeDistributionArrayType(innerType, 1);
+            var method =
+                new Func<T[][][][], IDistribution<double[][][][]>>(Array1111<T, object, object, object>).Method
+                    .GetGenericMethodDefinition();
+            method = method.MakeGenericMethod(typeof (T), inner2Type, innerType, middleType);
+            return (IDistribution<double[][][][]>) method.Invoke(null, new object[] {array});
+        }
+
+        private static IDistribution<double[][][][]> Array1111<T, TInner2, TInner, TMiddle>(T[][][][] array)
+            where T : IDistribution<double>
+        {
+            return (IDistribution<double[][][][]>) Activator.CreateInstance(
+                Distribution.MakeDistributionArrayType(typeof(TMiddle), 1), (object) array.Length,
+                (object) (Func<int, TMiddle>) (i => (TMiddle) Activator.CreateInstance(typeof(TMiddle), array[i].Length,
+                    (Func<int, TInner>) (j => (TInner) Activator.CreateInstance(typeof(TInner),
+                        (object) array[i][j].Length,
+                        (object) (Func<int, TInner2>) (k => (TInner2) Activator.CreateInstance(typeof(TInner2),
+                            array[i][j][k])))))));
+        }
+//
+//        private static IDistribution<T[][][]> Array111<Distribution, TInner, TMiddle>(Distribution[][][] array) where Distribution : IDistribution<T>
+//        {
+//            return (IDistribution<T[][][]>) Activator.CreateInstance(Distribution.MakeDistributionArrayType(typeof (TMiddle), 1), new object[2]
+//            {
+//                (object) array.Length,
+//                (object) (Func<int, TMiddle>) (i => (TMiddle) Activator.CreateInstance(typeof (TMiddle), new object[2]
+//                {
+//                    (object) array[i].Length,
+//                    (object) (Func<int, TInner>) (j => (TInner) Activator.CreateInstance(typeof (TInner), new object[1]
+//                    {
+//                        (object) array[i][j]
+//                    }))
+//                }))
+//            });
+//        }
     }
 }
 
