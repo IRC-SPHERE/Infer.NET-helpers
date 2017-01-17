@@ -149,17 +149,17 @@ namespace InferHelpers
         /// which builds a set of <see cref="ConstrainArgMax"/> constraints based
         /// on the value of the variable.
         /// </summary>
-        /// <param name="argmax">The specified integer variable</param>
+        /// <param name="max">The specified integer variable</param>
         /// <param name="score">The vector of score variables</param>
         /// <param name="prefix">Prefix for variable names.</param>
         /// <param name="current">Index of the current activity/resident (optional).</param> 
-        public static void ConstrainMaximum(Variable<int> argmax, VariableArray<double> score,
+        public static void ConstrainMaximum(Variable<int> max, VariableArray<double> score,
             string prefix = "activity", Variable<int> current = null)
         {
             var clone = score.Range.Clone();
             using (var block = Variable.ForEach(clone))
             {
-                var isMax = (argmax == block.Index).Named(prefix + "IsMax");
+                var isMax = (max == block.Index).Named(prefix + "IsMax");
                 using (Variable.If(isMax))
                 {
                     ConstrainArgMax(block.Index, score, prefix);
