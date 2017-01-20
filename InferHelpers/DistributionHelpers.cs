@@ -226,6 +226,17 @@ namespace InferHelpers
         /// Creates the gamma array.
         /// </summary>
         /// <returns>The gamma array.</returns>
+        /// <param name="count">Count.</param>
+        /// <param name="gamma">The distribution to clone.</param>
+        public static Gamma[] CreateGammaArray(int count, Gamma gamma)
+        {
+            return Enumerable.Repeat((Gamma)gamma.Clone(), count).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gamma array.
+        /// </summary>
+        /// <returns>The gamma array.</returns>
         /// <param name="first">First.</param>
         /// <param name="second">Second.</param>
         /// <param name="shape">Shape.</param>
