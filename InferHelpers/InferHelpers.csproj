@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="ClassifierHelpers.cs" />
     <Compile Include="DistributionHelpers.cs" />
+    <Compile Include="LinearAlgebra.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="ArrayHelpers.cs" />
