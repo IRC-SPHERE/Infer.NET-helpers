@@ -44,15 +44,14 @@ namespace InferHelpers
         /// <exception cref="ArgumentOutOfRangeException">Unknown norm.</exception>
         public static Variable<double> MatrixNorm(VariableArray<VariableArray<double>, double[][]> matrix, string norm)
         {
-            var source = matrix.Ranges[0];
+            var outer = matrix.Range;
+            var inner = matrix[0].Range;
             norm = norm.ToLowerInvariant();
 
             switch (norm)
             {
                 case "1":
                     // simply the maximum absolute column sum of the matrix. Transpose and use the infinity norm
-                    var outer = matrix.Range;
-                    var inner = matrix[0].Range;
                     var transposed = Variable.Array(Variable.Array<double>(outer), inner);
                     using (Variable.ForEach(outer))
                     {
@@ -62,31 +61,28 @@ namespace InferHelpers
                         }
                     }
                     return MatrixNorm(transposed, "max");
-                    
+
                 case "fro":
-                    var rowNorms = Variable.Array<double>(source);
-                    using (Variable.ForEach(source))
-                    {
-                        var copy = Variable.Copy(matrix[source]);
-                        var vec = Variable.Vector(copy);
-
-                        rowNorms[source] = Variable.InnerProduct(matrix[source], vec);
-                    }
-
-                    return Variable.Sum(rowNorms);
+                    var squares = Variable.Array(Variable.Array<double>(inner), outer).Named("squares");
+                    var copy = Variable.Array(Variable.Array<double>(inner), outer).Named("copy");
+                    copy[outer][inner] = Variable.Copy(matrix[outer][inner]);
+                    squares[outer][inner] = copy[outer][inner] * matrix[outer][inner];
+                    var rowNorms = Variable.Array<double>(outer).Named("rowFrobeniusNorms");
+                    rowNorms[outer] = Variable.Sum(squares[outer]);
+                    return Variable.Sum(rowNorms).Named("FrobeniusNorm");
                 case "max":
                 case "infinity":
                     // Infinity (max) norm: which is simply the maximum absolute row sum of the matrix
-                    var rowSums = Variable.Array<double>(source);
-                    using (Variable.ForEach(source))
+                    var rowSums = Variable.Array<double>(outer);
+                    using (Variable.ForEach(outer))
                     {
-                        var abs = GetAbsolute(matrix[source]);
-                        rowSums[source] = Variable.Sum(abs);
+                        var abs = GetAbsolute(matrix[outer]);
+                        rowSums[outer] = Variable.Sum(abs);
                     }
                     return Max(rowSums);
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(norm));
             }
-
-            throw new ArgumentOutOfRangeException(nameof(norm));
         }
 
         /// <summary>
