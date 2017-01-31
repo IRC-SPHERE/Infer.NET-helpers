@@ -239,6 +239,18 @@ namespace InferHelpers
         /// <returns>The gamma array.</returns>
         /// <param name="first">First.</param>
         /// <param name="second">Second.</param>
+        /// <param name="gamma">The distribution to clone.</param>
+        public static Gamma[][] CreateGammaArray(int first, int second, Gamma gamma)
+        {
+            return Enumerable.Repeat(CreateGammaArray(second, gamma), first).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gamma array.
+        /// </summary>
+        /// <returns>The gamma array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
         /// <param name="shape">Shape.</param>
         /// <param name="rate">Rate.</param>
         public static Gamma[][] CreateGammaArray(int first, int second, double shape, double rate)
@@ -313,6 +325,15 @@ namespace InferHelpers
         /// </summary>
         /// <returns>The gaussian array copy.</returns>
         public static Gaussian[][] Copy(Gaussian[][] array)
+        {
+            return array?.Select(Copy).ToArray();
+        }
+
+        /// <summary>
+        /// Copies the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array copy.</returns>
+        public static Gaussian[][][] Copy(Gaussian[][][] array)
         {
             return array?.Select(Copy).ToArray();
         }

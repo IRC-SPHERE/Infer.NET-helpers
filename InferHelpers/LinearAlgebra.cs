@@ -39,10 +39,12 @@ namespace InferHelpers
         /// </summary>
         /// <param name="matrix">The input matrix.</param>
         /// <param name="norm">The norm.</param>
+        /// <param name="prefix">Prefix for variable names.</param>
         /// <returns>The norm of the matrix.</returns>
         /// <exception cref="NotImplementedException"></exception>
         /// <exception cref="ArgumentOutOfRangeException">Unknown norm.</exception>
-        public static Variable<double> MatrixNorm(VariableArray<VariableArray<double>, double[][]> matrix, string norm)
+        public static Variable<double> MatrixNorm(VariableArray<VariableArray<double>, double[][]> matrix, string norm,
+            string prefix)
         {
             var outer = matrix.Range;
             var inner = matrix[0].Range;
@@ -60,26 +62,26 @@ namespace InferHelpers
                             transposed[inner][outer] = matrix[outer][inner];
                         }
                     }
-                    return MatrixNorm(transposed, "max");
+                    return MatrixNorm(transposed, "max", prefix);
 
                 case "fro":
-                    var squares = Variable.Array(Variable.Array<double>(inner), outer).Named("squares");
-                    var copy = Variable.Array(Variable.Array<double>(inner), outer).Named("copy");
+                    var squares = Variable.Array(Variable.Array<double>(inner), outer).Named($"{prefix}Squares");
+                    var copy = Variable.Array(Variable.Array<double>(inner), outer).Named($"{prefix}Copy");
                     copy[outer][inner] = Variable.Copy(matrix[outer][inner]);
                     squares[outer][inner] = copy[outer][inner] * matrix[outer][inner];
-                    var rowNorms = Variable.Array<double>(outer).Named("rowFrobeniusNorms");
+                    var rowNorms = Variable.Array<double>(outer).Named($"{prefix}RowFrobeniusNorms");
                     rowNorms[outer] = Variable.Sum(squares[outer]);
-                    return Variable.Sum(rowNorms).Named("FrobeniusNorm");
+                    return Variable.Sum(rowNorms).Named($"{prefix}FrobeniusNorm");
                 case "max":
                 case "infinity":
                     // Infinity (max) norm: which is simply the maximum absolute row sum of the matrix
                     var rowSums = Variable.Array<double>(outer);
                     using (Variable.ForEach(outer))
                     {
-                        var abs = GetAbsolute(matrix[outer]);
+                        var abs = GetAbsolute(matrix[outer], prefix);
                         rowSums[outer] = Variable.Sum(abs);
                     }
-                    return Max(rowSums);
+                    return Max(rowSums, prefix);
                 default:
                     throw new ArgumentOutOfRangeException(nameof(norm));
             }
@@ -89,16 +91,17 @@ namespace InferHelpers
         /// Get the absolute values of the jagged array (matrix)
         /// </summary>
         /// <param name="matrix">The jagged array of variables.</param>
+        /// <param name="prefix">Prefix for variable names.</param>
         /// <returns>Absolute values of the matrix.</returns>
         private static VariableArray<VariableArray<double>, double[][]> GetAbsolutes(
-            VariableArray<VariableArray<double>, double[][]> matrix)
+            VariableArray<VariableArray<double>, double[][]> matrix, string prefix)
         {
             var source = matrix.Range;
             var feature = matrix[0].Range;
             var absolutes = Variable.Array(Variable.Array<double>(feature), source);
             using (Variable.ForEach(source))
             {
-                absolutes[source] = GetAbsolute(matrix[source]);
+                absolutes[source] = GetAbsolute(matrix[source], prefix);
             }
 
             return absolutes;
@@ -108,11 +111,12 @@ namespace InferHelpers
         /// Get the absolute values of the array
         /// </summary>
         /// <param name="array">The array of variables.</param>
+        /// <param name="prefix">Prefix for variable names.</param>
         /// <returns>Absolute values of the array.</returns>
-        private static VariableArray<double> GetAbsolute(VariableArray<double> array)
+        private static VariableArray<double> GetAbsolute(VariableArray<double> array, string prefix)
         {
             var feature = array.Range;
-            var abs = Variable.Array<double>(feature).Named("abs");
+            var abs = Variable.Array<double>(feature).Named($"{prefix}Abs");
             using (Variable.ForEach(feature))
             {
                 var isPos = Variable.IsPositive(array[feature]);
@@ -134,11 +138,12 @@ namespace InferHelpers
         /// Maximum value of the array
         /// </summary>
         /// <param name="array">The array</param>
+        /// <param name="prefix">Prefix for variable arrays</param>
         /// <returns>The max of the array.</returns>
-        public static Variable<double> Max(VariableArray<double> array)
+        public static Variable<double> Max(VariableArray<double> array, string prefix)
         {
             var n = array.Range;
-            var maxUpTo = Variable.Array<double>(n).Named("maxUpTo");
+            var maxUpTo = Variable.Array<double>(n).Named($"{prefix}maxUpTo");
             using (var fb = Variable.ForEach(n))
             {
                 var i = fb.Index;
