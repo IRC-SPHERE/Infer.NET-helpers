@@ -44,12 +44,33 @@ namespace InferHelpers
         /// </summary>
         /// <returns>The uniform gaussians.</returns>
         /// <param name="first">First.</param>
+        public static Gaussian[] CreateUniformGaussians(int first)
+        {
+            return Enumerable.Range(0, first).Select(t => Gaussian.Uniform()).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the uniform gaussians.
+        /// </summary>
+        /// <returns>The uniform gaussians.</returns>
+        /// <param name="first">First.</param>
         /// <param name="second">Second.</param>
         public static Gaussian[][] CreateUniformGaussians(int first, int second)
         {
             return Enumerable.Range(0, first).Select(
-                f => Enumerable.Range(0, second).Select(
-                    t => Gaussian.Uniform()).ToArray()).ToArray();
+                f => CreateUniformGaussians(second)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the uniform gaussians.
+        /// </summary>
+        /// <returns>The uniform gaussians.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        public static Gaussian[][] CreateUniformGaussians(int first, int[] second)
+        {
+            return Enumerable.Range(0, first).Select(
+                (f, i) => CreateUniformGaussians(second[i])).ToArray();
         }
 
         /// <summary>
@@ -63,6 +84,47 @@ namespace InferHelpers
         {
             return Enumerable.Range(0, first).Select(
                 f => CreateUniformGaussians(second, third)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the uniform gaussians.
+        /// </summary>
+        /// <returns>The uniform gaussians.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="third">Third.</param>
+        public static Gaussian[][][] CreateUniformGaussians(int first, int second, int[] third)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => CreateUniformGaussians(second, third)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the uniform gaussians.
+        /// </summary>
+        /// <returns>The uniform gaussians.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="third">Third.</param>
+        /// <param name="fourth">Fourth.</param>
+        public static Gaussian[][][][] CreateUniformGaussians(int first, int second, int third, int fourth)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => CreateUniformGaussians(second, third, fourth)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the uniform gaussians.
+        /// </summary>
+        /// <returns>The uniform gaussians.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="third">Third.</param>
+        /// <param name="fourth">Fourth.</param>
+        public static Gaussian[][][][] CreateUniformGaussians(int first, int second, int third, int[] fourth)
+        {
+            return Enumerable.Range(0, first).Select(
+                f => CreateUniformGaussians(second, third, fourth)).ToArray();
         }
 
         /// <summary>
@@ -171,12 +233,80 @@ namespace InferHelpers
         /// <returns>The gaussian array.</returns>
         /// <param name="first">First.</param>
         /// <param name="second">Second.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[][] CreateGaussianArray(int first, int[] second, Func<double> mean,
+            Func<double> variance)
+        {
+            return Enumerable.Range(0, first)
+                .Select((f, i) => CreateGaussianArray(second[i], mean(), variance()))
+                .ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
         /// <param name="third">Third.</param>
         /// <param name="mean">Mean.</param>
         /// <param name="variance">Variance.</param>
-        public static Gaussian[][][] CreateGaussianArray(int first, int second, int third, Func<double> mean, Func<double> variance)
+        public static Gaussian[][][] CreateGaussianArray(int first, int second, int third, Func<double> mean,
+            Func<double> variance)
         {
             return Enumerable.Range(0, first).Select(f => CreateGaussianArray(second, third, mean, variance)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="third">Third.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[][][] CreateGaussianArray(int first, int second, int[] third, Func<double> mean,
+            Func<double> variance)
+        {
+            return Enumerable.Range(0, first).Select(f => CreateGaussianArray(second, third, mean, variance)).ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="third">Third.</param>
+        /// <param name="fourth">Fourth.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[][][][] CreateGaussianArray(int first, int second, int third, int fourth,
+            Func<double> mean, Func<double> variance)
+        {
+            return Enumerable.Range(0, first)
+                .Select(f => CreateGaussianArray(second, third, fourth, mean, variance))
+                .ToArray();
+        }
+
+        /// <summary>
+        /// Creates the gaussian array.
+        /// </summary>
+        /// <returns>The gaussian array.</returns>
+        /// <param name="first">First.</param>
+        /// <param name="second">Second.</param>
+        /// <param name="third">Third.</param>
+        /// <param name="fourth">Fourth.</param>
+        /// <param name="mean">Mean.</param>
+        /// <param name="variance">Variance.</param>
+        public static Gaussian[][][][] CreateGaussianArray(int first, int second, int third, int[] fourth,
+            Func<double> mean, Func<double> variance)
+        {
+            return Enumerable.Range(0, first)
+                .Select(f => CreateGaussianArray(second, third, fourth, mean, variance))
+                .ToArray();
         }
 
         /// <summary>
@@ -200,14 +330,17 @@ namespace InferHelpers
         /// <param name="second">Second.</param>
         /// <param name="mean">Mean.</param>
         /// <param name="variance">Variance.</param>
-        public static VectorGaussian[] CreateVectorGaussianArray(int first, int second, Func<double> mean, double variance)
+        public static VectorGaussian[] CreateVectorGaussianArray(int first, int second, Func<double> mean,
+            double variance)
         {
-            return Enumerable.Range(0, first).Select(
-                f => VectorGaussian.FromMeanAndVariance(
-                    Vector.FromArray(Enumerable.Range(0, second).Select(s => mean()).ToArray()),
-                    PositiveDefiniteMatrix.IdentityScaledBy(second, variance)
+            return Enumerable.Range(0, first)
+                .Select(
+                    f => VectorGaussian.FromMeanAndVariance(
+                        Vector.FromArray(Enumerable.Range(0, second).Select(s => mean()).ToArray()),
+                        PositiveDefiniteMatrix.IdentityScaledBy(second, variance)
+                    )
                 )
-            ).ToArray();
+                .ToArray();
         }
 
         /// <summary>
@@ -387,12 +520,14 @@ namespace InferHelpers
         /// <returns>
         /// The <see cref="DistributionStructArray{TDistribution, Double}" />.
         /// </returns>
-        public static DistributionStructArray<TDistribution, double> Copy<TDistribution>(IEnumerable<TDistribution> arrayToCopy)
-            where TDistribution : struct, IDistribution<double>, SettableToProduct<TDistribution>, SettableToRatio<TDistribution>,
+        public static DistributionStructArray<TDistribution, double> Copy<TDistribution>(
+            IEnumerable<TDistribution> arrayToCopy)
+            where TDistribution : struct, IDistribution<double>, SettableToProduct<TDistribution>,
+            SettableToRatio<TDistribution>,
             SettableToPower<TDistribution>, SettableToWeightedSum<TDistribution>, CanGetLogAverageOf<TDistribution>,
             CanGetLogAverageOfPower<TDistribution>, CanGetAverageLog<TDistribution>, Sampleable<double>
         {
-            return (DistributionStructArray<TDistribution, double>)Distribution<double>.Array(arrayToCopy.ToArray());
+            return (DistributionStructArray<TDistribution, double>) Distribution<double>.Array(arrayToCopy.ToArray());
         }
 
         /// <summary>
@@ -403,8 +538,10 @@ namespace InferHelpers
         /// <returns>
         /// The <see cref="DistributionStructArray{TDistribution, Double}" /> array.
         /// </returns>
-        public static DistributionStructArray<TDistribution, double>[] Copy<TDistribution>(IEnumerable<IList<TDistribution>> arrayToCopy)
-            where TDistribution : struct, IDistribution<double>, SettableToProduct<TDistribution>, SettableToRatio<TDistribution>,
+        public static DistributionStructArray<TDistribution, double>[] Copy<TDistribution>(
+            IEnumerable<IList<TDistribution>> arrayToCopy)
+            where TDistribution : struct, IDistribution<double>, SettableToProduct<TDistribution>,
+            SettableToRatio<TDistribution>,
             SettableToPower<TDistribution>, SettableToWeightedSum<TDistribution>, CanGetLogAverageOf<TDistribution>,
             CanGetLogAverageOfPower<TDistribution>, CanGetAverageLog<TDistribution>, Sampleable<double>
         {

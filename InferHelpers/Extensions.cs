@@ -155,7 +155,19 @@ namespace InferHelpers
         public static double[][] GetMeans<T>(this IEnumerable<IEnumerable<T>> variables)
             where T: CanGetMean<double>
         {
-            return variables.Select(ia => ia.GetMeans<T>()).ToArray();
+            return variables.Select(ia => ia.GetMeans()).ToArray();
+        }
+
+        public static double[][][] GetMeans<T>(this IEnumerable<IEnumerable<IEnumerable<T>>> variables)
+            where T: CanGetMean<double>
+        {
+            return variables.Select(ia => ia.GetMeans()).ToArray();
+        }
+
+        public static double[][][][] GetMeans<T>(this IEnumerable<IEnumerable<IEnumerable<IEnumerable<T>>>> variables)
+            where T: CanGetMean<double>
+        {
+            return variables.Select(ia => ia.GetMeans()).ToArray();
         }
 
         public static Vector[] GetMeans(this IEnumerable<VectorGaussian> variables)
@@ -193,6 +205,16 @@ namespace InferHelpers
         }
 
         public static double[][] GetPrecisions(this IEnumerable<IEnumerable<Gaussian>> variables)
+        {
+            return variables.Select(ia => ia.GetPrecisions()).ToArray();
+        }
+
+        public static double[][][] GetPrecisions(this IEnumerable<IEnumerable<IEnumerable<Gaussian>>> variables)
+        {
+            return variables.Select(ia => ia.GetPrecisions()).ToArray();
+        }
+
+        public static double[][][][] GetPrecisions(this IEnumerable<IEnumerable<IEnumerable<IEnumerable<Gaussian>>>> variables)
         {
             return variables.Select(ia => ia.GetPrecisions()).ToArray();
         }

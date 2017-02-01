@@ -81,7 +81,68 @@ namespace InferHelpers
         /// <param name="value">Value.</param>
         public static T[][] Uniform<T>(int m, int n, T value)
         {
-            return Enumerable.Repeat(Uniform(m, value), n).ToArray();
+            return Enumerable.Repeat(Uniform(n, value), m).ToArray();
+        }
+
+        /// <summary>
+        /// Jagged array of uniform values of lengths m, n.
+        /// </summary>
+        /// <param name="m">M.</param>
+        /// <param name="n">N.</param>
+        /// <param name="value">Value.</param>
+        public static T[][] Uniform<T>(int m, int[] n, T value)
+        {
+            return Enumerable.Range(0, m).Select(i => Uniform(n[i], value)).ToArray();
+        }
+
+        /// <summary>
+        /// Jagged array of uniform values of lengths m, n, p, q.
+        /// </summary>
+        /// <param name="m">M.</param>
+        /// <param name="n">N.</param>
+        /// <param name="p">P.</param>
+        /// <param name="value">Value.</param>
+        public static T[][][] Uniform<T>(int m, int n, int p, T value)
+        {
+            return Enumerable.Repeat(Uniform(n, p, value), m).ToArray();
+        }
+
+        /// <summary>
+        /// Jagged array of uniform values of lengths m, n, p, q.
+        /// </summary>
+        /// <param name="m">M.</param>
+        /// <param name="n">N.</param>
+        /// <param name="p">P.</param>
+        /// <param name="value">Value.</param>
+        public static T[][][] Uniform<T>(int m, int n, int[] p, T value)
+        {
+            return Enumerable.Repeat(Uniform(m, p, value), m).ToArray();
+        }
+
+        /// <summary>
+        /// Jagged array of uniform values of lengths m, n, p, q.
+        /// </summary>
+        /// <param name="m">M.</param>
+        /// <param name="n">N.</param>
+        /// <param name="p">P.</param>
+        /// <param name="q">Q.</param>
+        /// <param name="value">Value.</param>
+        public static T[][][][] Uniform<T>(int m, int n, int p, int q, T value)
+        {
+            return Enumerable.Repeat(Uniform(n, p, q, value), m).ToArray();
+        }
+
+        /// <summary>
+        /// Jagged array of uniform values of lengths m, n, p, q.
+        /// </summary>
+        /// <param name="m">M.</param>
+        /// <param name="n">N.</param>
+        /// <param name="p">P.</param>
+        /// <param name="q">Q.</param>
+        /// <param name="value">Value.</param>
+        public static T[][][][] Uniform<T>(int m, int n, int p, int[] q, T value)
+        {
+            return Enumerable.Repeat(Uniform(n, p, q, value), m).ToArray();
         }
 
         /// <summary>
