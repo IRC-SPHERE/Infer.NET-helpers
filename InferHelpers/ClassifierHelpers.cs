@@ -115,7 +115,7 @@ namespace InferHelpers
         /// <param name="weights">Weight array per class.</param>
         /// <param name="values">Array of values.</param>
         /// <param name="indices">Array of indices.</param>
-        /// <param name = "activeSensor">Active sensor.</param>
+        /// <param name="activeFeature">Active feature range.</param>
         /// <param name="noisePrecision">Noise precision.</param>
         /// <param name="prefix">Prefix for variable names.</param>
         /// <returns>Score for each class</returns>
@@ -123,7 +123,7 @@ namespace InferHelpers
             VariableArray2DDouble weights, 
             VariableArray<double> values, 
             VariableArray<int> indices, 
-            Range activeSensor,
+            Range activeFeature,
             Variable<double> noisePrecision,
             string prefix = "activity")
         {
@@ -133,11 +133,11 @@ namespace InferHelpers
             scorePlusNoise.AddAttribute(MicrosoftResearch.Infer.QueryTypes.Marginal);
 
             var sparseWeights =
-                Variable.Array(Variable.Array<double>(activeSensor), clone).Named(prefix + "SparseWeights");
-            var product = Variable.Array(Variable.Array<double>(activeSensor), clone).Named(prefix + "Product");
+                Variable.Array(Variable.Array<double>(activeFeature), clone).Named(prefix + "SparseWeights");
+            var product = Variable.Array(Variable.Array<double>(activeFeature), clone).Named(prefix + "Product");
             
             sparseWeights[clone] = Variable.Subarray(weights[clone], indices);
-            product[clone][activeSensor] = values[activeSensor] * sparseWeights[clone][activeSensor];
+            product[clone][activeFeature] = values[activeFeature] * sparseWeights[clone][activeFeature];
             score[clone] = Variable.Sum(product[clone]);
             scorePlusNoise[clone] = Variable.GaussianFromMeanAndPrecision(score[clone], noisePrecision);
 
